@@ -3,7 +3,7 @@ Title: Project 3 Package for STAT 302
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Adam",
-           family = "McBRoom",
+           family = "McBroom",
            role = c("aut", "cre"),
            email = "ads15mcb@gmail.com")
 Description: This package is a submission for Project 3 of STAT 302 at UW.
@@ -15,3 +15,5 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
