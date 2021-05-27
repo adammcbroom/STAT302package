@@ -1,8 +1,9 @@
 ---
 title: "Project 3: STAT302package Tutorial"
+author: "Adam McBroom"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Project 3: STAT302package Tutorial}
+  %\VignetteIndexEntry{STAT302package Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
