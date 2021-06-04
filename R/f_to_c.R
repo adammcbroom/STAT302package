@@ -3,7 +3,7 @@
 #' This function converts temperature from Fahrenheit to Celsius.
 #'
 #' @param temp_F Numeric input indicating temperature in Fahrenheit.
-#' @keywords tempurature
+#' @keywords temperature
 #'
 #' @return Numeric representing temperature \code{temp_F} converted to Celsius.
 #'

@@ -21,4 +21,4 @@ f_to_c(32)
 f_to_c(212)
 
 }
-\keyword{tempurature}
+\keyword{temperature}
