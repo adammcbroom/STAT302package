@@ -1,4 +1,4 @@
-#' Gapminder data.
+#' Gapminder data
 #'
 #' Excerpt of the Gapminder data on life expectancy, GDP per capita, and
 #' population by country.

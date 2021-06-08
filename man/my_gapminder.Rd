@@ -3,7 +3,7 @@
 \docType{data}
 \name{my_gapminder}
 \alias{my_gapminder}
-\title{Gapminder data.}
+\title{Gapminder data}
 \format{
 The main data frame \code{my_gapminder} has 1704 rows and 6 variables:
 \describe{

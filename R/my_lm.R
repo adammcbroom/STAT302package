@@ -1,4 +1,4 @@
-#' My linear model
+#' Fitting linear models
 #'
 #' This function is used to fit linear models in order to carry out regressions.
 #'
@@ -14,14 +14,17 @@
 #' @examples
 #' my_lm(mpg ~ hp + wt, mtcars)
 #'
+#' @importFrom stats model.frame model.matrix model.response predict pt sd
+#'   na.omit
+#'
 #' @export
 
 my_lm <- function(formula, data) {
   # Extract and store model matrix X
-  mod_mat_X <- model.matrix(formula, data)
+  mod_mat_X <- stats::model.matrix(formula, data)
   # Extract and store model response Y
-  mod_frame_1 <- model.frame(formula, data)
-  mod_resp_Y <- model.response(mod_frame_1)
+  mod_frame_1 <- stats::model.frame(formula, data)
+  mod_resp_Y <- stats::model.response(mod_frame_1)
   # Calculate and store degrees of freedom
   df_2 <- nrow(data) - ncol(mod_mat_X)
   # Calculate the coefficients
@@ -35,7 +38,7 @@ my_lm <- function(formula, data) {
   # Calculate and store the t values
   t_val <- (estimate / std_errors)
   # Calculate and store the p values
-  prob <- 2 * pt(abs(t_val), df_2, lower.tail = FALSE)
+  prob <- 2 * stats::pt(abs(t_val), df_2, lower.tail = FALSE)
   # Return table with labeled columns and rows
   output_mat <- matrix(NA, nrow = nrow(estimate), ncol = 4)
   output_mat[ , 1] <- estimate

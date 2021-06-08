@@ -1,10 +1,11 @@
-#' My t-test
+#' T-test
 #'
 #' This function performs a one-sample t-test on a numeric vector of input data.
 #'
 #' @param x A numeric vector of data.
 #' @param alternative A character string specifying the alternative hypothesis.
-#'   Only accepts input values of \code{"two.sided"}, \code{"less"}, or\code{"greater"}.
+#'   Only accepts input values of \code{"two.sided"}, \code{"less"},
+#'   or\code{"greater"}.
 #' @param mu Numeric input indicating the null hypothesis value of the mean.
 #' @keywords inference
 #'
@@ -27,7 +28,7 @@ my_t.test <- function(x, alternative, mu) {
   df <- length(x) - 1
   # Calculate p value for test with alternative hypothesis as "less"
   if (alternative == "less") {
-    p_val <- pt(test_stat, df, lower.tail = TRUE)
+    p_val <- stats::pt(test_stat, df, lower.tail = TRUE)
     # Store and print output
     output <- list("test_stat" = test_stat,
                    "df" = df,
@@ -36,7 +37,7 @@ my_t.test <- function(x, alternative, mu) {
     return(output)
     # Calculate p value for test with alternative hypothesis as "greater"
   } else if (alternative == "greater") {
-    p_val <- pt(test_stat, df, lower.tail = FALSE)
+    p_val <- stats::pt(test_stat, df, lower.tail = FALSE)
     # Store and print output
     output <- list("test_stat" = test_stat,
                    "df" = df,
@@ -45,7 +46,7 @@ my_t.test <- function(x, alternative, mu) {
     return(output)
     # Calculate p value for test with alternative hypothesis as "two sided"
   } else if (alternative == "two.sided") {
-    p_val <- 2 * pt(abs(test_stat), df, lower.tail = FALSE)
+    p_val <- 2 * stats::pt(abs(test_stat), df, lower.tail = FALSE)
     # Store and print output
     output <- list("test_stat" = test_stat,
                    "df" = df,

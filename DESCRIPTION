@@ -25,4 +25,7 @@ Imports:
     class,
     tibble,
     dplyr,
-    ggplot2
+    ggplot2,
+    tidyr,
+    magrittr,
+    stats

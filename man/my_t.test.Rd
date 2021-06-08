@@ -2,7 +2,7 @@
 % Please edit documentation in R/my_t.test.R
 \name{my_t.test}
 \alias{my_t.test}
-\title{My t-test}
+\title{T-test}
 \usage{
 my_t.test(x, alternative, mu)
 }
@@ -10,7 +10,8 @@ my_t.test(x, alternative, mu)
 \item{x}{A numeric vector of data.}
 
 \item{alternative}{A character string specifying the alternative hypothesis.
-Only accepts input values of \code{"two.sided"}, \code{"less"}, or\code{"greater"}.}
+Only accepts input values of \code{"two.sided"}, \code{"less"},
+or\code{"greater"}.}
 
 \item{mu}{Numeric input indicating the null hypothesis value of the mean.}
 }
