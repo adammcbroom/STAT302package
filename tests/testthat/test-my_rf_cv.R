@@ -1,3 +1,3 @@
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("my_rf_cv returns a numeric", {
+  expect_type(my_rf_cv(5), "double")
 })

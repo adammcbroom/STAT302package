@@ -7,4 +7,3 @@ test_that("my_t.test returns a list", {
   expect_type(my_t.test(1:10000, alternative = "less", mu = 4900), "list")
   expect_type(my_t.test(1:10000, alternative = "greater", mu = 5100), "list")
 })
-
