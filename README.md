@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/adammcbroom/STAT302package/branch/master/graph/badge.svg?token=6YSJYBF7IT)](https://codecov.io/gh/adammcbroom/STAT302package)
 <!-- badges: end -->
 
-The goal of STAT302package is to ...
+STAT302package includes an assortment of functions for statistical inference and prediction.
 
 ## Installation
 

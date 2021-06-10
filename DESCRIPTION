@@ -28,4 +28,5 @@ Imports:
     ggplot2,
     tidyr,
     magrittr,
-    stats
+    stats,
+    kableExtra
