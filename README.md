@@ -16,7 +16,10 @@ You can install the package through GitHub using:
 devtools::install_github("adammcbroom/STAT302package")
 ```
 
+## Use
+
 To view the vignette:
+
 ``` r
 devtools::install_github("adammcbroom/STAT302package", build_vignette = TRUE, build_opts = c())
 library(STAT302package)
