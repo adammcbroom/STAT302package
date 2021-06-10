@@ -14,6 +14,7 @@ You can install the package through GitHub using:
 
 ``` r
 devtools::install_github("adammcbroom/STAT302package")
+library(STAT302package)
 ```
 
 ## Use
