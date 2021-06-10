@@ -1,10 +1,10 @@
 #' Random forest cross-validation
 #'
-#' This function uses a random algorithm on the \code{my_penguins} data from the
-#'   \code{palmerpenguins} package to predict output \code{body_mass_g} with
-#'   covariates \code{bill_length_mm}, \code{bill_depth_mm}, and
-#'   \code{flipper_length_mm}. Also computes the cross-validation mean square
-#'   error.
+#' This function uses a random forest algorithm with 100 trees on the
+#'   \code{my_penguins} data from the \code{palmerpenguins} package to predict
+#'   output \code{body_mass_g} with covariates \code{bill_length_mm},
+#'   \code{bill_depth_mm}, and \code{flipper_length_mm}. Also computes the
+#'   cross-validation mean square error.
 #'
 #' @param k An integer representing the number of folds used in
 #'   cross-validation.

@@ -6,7 +6,7 @@
 #'   to be fitted.
 #' @param data An input data frame containing the variables to be used in the
 #'   model.
-#' @keywords inference
+#' @keywords inference, prediction
 #'
 #' @return A table with rows for each estimated coefficient and columns
 #'   including the estimate, standard error, t-statistic, and p-value.

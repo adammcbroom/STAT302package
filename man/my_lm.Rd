@@ -24,4 +24,5 @@ This function is used to fit linear models in order to carry out regressions.
 my_lm(mpg ~ hp + wt, mtcars)
 
 }
-\keyword{inference}
+\keyword{inference,}
+\keyword{prediction}

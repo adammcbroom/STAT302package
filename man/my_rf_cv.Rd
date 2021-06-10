@@ -15,11 +15,11 @@ Numeric representing the cross-validation error, or the average MSE
 across all folds.
 }
 \description{
-This function uses a random algorithm on the \code{my_penguins} data from the
-\code{palmerpenguins} package to predict output \code{body_mass_g} with
-covariates \code{bill_length_mm}, \code{bill_depth_mm}, and
-\code{flipper_length_mm}. Also computes the cross-validation mean square
-error.
+This function uses a random forest algorithm with 100 trees on the
+\code{my_penguins} data from the \code{palmerpenguins} package to predict
+output \code{body_mass_g} with covariates \code{bill_length_mm},
+\code{bill_depth_mm}, and \code{flipper_length_mm}. Also computes the
+cross-validation mean square error.
 }
 \examples{
 my_rf_cv(10)

@@ -8,13 +8,278 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+\addtolength{\headheight}{-.025\textheight} 
+\thispagestyle{fancyplain} 
+\rhead{\includegraphics[height=.1\textheight]{logo.png}}
+\renewcommand{\headrulewidth}{0pt}
+
+
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
+knitr::opts_chunk$set(fig.width = 8, fig.height = 4,
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
+
+## Part 1: Introduction
+
+This package, `STAT302package`, is a collection of functions used for statistical inference and prediction. 
+
+You can install `STAT302package` using:
+```{r, eval=FALSE}
+devtools::install_github("adammcbroom/STAT302package")
+```
+
+And load the package with:
 ```{r setup}
 library(STAT302package)
 ```
+
+
+## Part 2: Tutorial for my_t.test
+
+The first function in this package, `my_t.test`, performs a one-sample t-test on input data. Below, I demonstrate the function using life expectancy data from the `gapminder` package.
+
+The call for `my_t.test` requires the parameters `x`, which is a numeric vector of input data; `alternative`, which is a character string specifying the alternative hypothesis, and `mu`, which is a number indicating the null hypothesis value of the mean. 
+
+To perform a two-sided t-test of the hypothesis
+$$
+\begin{align}
+H_0: \mu &= 60\\
+H_a: \mu &\neq 60,
+\end{align}
+$$
+the input for `alternative` is `"two.sided"` and the input for `mu` is 60. Since we are using the life expectancy data from the package `gapminder`, the input for `x` is `my_gapminder$lifeExp`. The sample mean of life expectancy from the `gapminder` data is `r mean(my_gapminder$lifeExp)`.
+
+The output of the function includes the test statistic, degrees of freedom, alternative hypothesis, and the p-value.
+```{r}
+my_t.test(my_gapminder$lifeExp, "two.sided", mu = 60)
+```
+
+Here, we can see that the function returned a p-value of `r my_t.test(my_gapminder$lifeExp, "two.sided", mu = 60)$p_val`. This is the probability of observing a sample mean life expectancy as or more extreme in either direction than what we observed, `r mean(my_gapminder$lifeExp)`, assuming the null hypothesis mean of 60 is true. Since the p-value is greater than 0.05, we do not have sufficient evidence to reject the null hypothesis. 
+
+To perform a one-sided t-test of the hypothesis
+$$
+\begin{align}
+H_0: \mu &= 60\\
+H_a: \mu &< 60,
+\end{align}
+$$
+we change the input for `alternative` to`"less"` to specify that the alternative hypothesis is that the true value of the mean is less than `mu`. The results are:
+
+```{r}
+my_t.test(my_gapminder$lifeExp, "less", mu = 60)
+```
+
+This time, the function returned a p-value of `r my_t.test(my_gapminder$lifeExp, "less", mu = 60)$p_val`. This is the probability of observing a sample mean life expectancy less than or equal to what we observed, `r mean(my_gapminder$lifeExp)`, assuming the null hypothesis mean of 60 is true. Since the p-value is less than 0.05, our result is statistically significant. We have sufficient evidence to reject the null hypothesis. 
+
+Finally, to perform a one-sided t-test of the hypothesis
+$$
+\begin{align}
+H_0: \mu &= 60\\
+H_a: \mu &> 60,
+\end{align}
+$$
+we change the input for `alternative` to`"greater"` to specify that the alternative hypothesis is that the true value of the mean is greater than `mu`. The results are:
+
+```{r}
+my_t.test(my_gapminder$lifeExp, "greater", mu = 60)
+```
+
+This time, the function returned a p-value of `r my_t.test(my_gapminder$lifeExp, "greater", mu = 60)$p_val`. This is the probability of observing a sample mean life expectancy greater than or equal to what we observed, `r mean(my_gapminder$lifeExp)`, assuming the null hypothesis mean of 60 is true. Since the p-value is greater than 0.05, our result is not statistically significant. We do not have sufficient evidence to reject the null hypothesis.
+
+
+## Part 3: Tutorial for my_lm
+
+The second function in this package, `my_lm`, fits a linear model to carry out regression analysis. Below, I demonstrate how the function works using data from the `gapminder`package. 
+
+The call for `my_lm` requires the parameters `formula`, which is an object of class `formula` that specifies the model to be fitted; and `data`, an input data frame containing the variables to be used in the model. 
+
+The function returns a `table` with the following output for each covariate and an intercept:
+
+* `Estimate`: a regression coefficient,
+* `Std. Error`: the standard error of the estimate,
+* `t value`: the test statistic for the estimate,
+* and `Pr(>|t|)`: p-value for the estimate.
+
+
+Let's use this function to perform a linear regression using `lifeExp` as the response variable and `gdpPercap` and `continent` as the explanatory variables:
+
+```{r}
+lm_output <- my_lm(lifeExp ~ gdpPercap + continent, data = my_gapminder)
+lm_output
+```
+The estimated coefficient on `gdpPercap` is `r lm_output[2, 1]`. This is the expected change in life expectancy per 1-unit change in GDP per capita, holding all other variables constant. 
+
+`my_lm` also tests for the significance of the estimates. For example, the t-value and p-value are associated with the test that 
+$$
+\begin{align}
+H_0: \beta_1 &= 0\\
+H_a: \beta_1 &\neq 0,
+\end{align}
+$$
+or that the coefficient on GDP per capita, $\beta_1$, is not equal to zero. As we can see in the output table, the p-value associated with $\beta_1$ is `r lm_output[2, 4]`. This represents the probability of observing a coefficient greater more extreme in either direction than our estimate `r lm_output[2, 1]`, assuming the null hypothesis is true and there is no relationship between GDP per capita and life expectancy. Since the p-value is less than 0.05, the estimate of the coefficient is statistically significant, and we have sufficient evidence to reject the null hypothesis. 
+
+Using the estimates provided by the model, we can estimate values of life expectancy based on the covariates for each observation in the `gapminder` data set. To get a picture of how the model fits these predicted values, we can plot these predicted values against the actual values of life expectancy: 
+
+```{r}
+# Calculate fitted values for the response variable
+X <- model.matrix(lifeExp ~ gdpPercap + continent, data = my_gapminder)
+beta <- lm_output$Estimate
+fitted <- X %*% beta
+
+# Plot fitted values against actual values
+library(ggplot2)
+act_fit <- data.frame(Actual = my_gapminder$lifeExp, Fitted = fitted)
+ggplot(act_fit, aes(x = Fitted, y = Actual)) +
+  geom_point(size = 0.75) +
+  geom_abline(slope = 1, intercept = 0, col = "red", lty = 2) + 
+  theme_bw() +
+  labs(x = "Fitted values", 
+       y = "Actual values", 
+       title = "Actual vs. fitted values of life expectancy") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+It is clear that there is reasonably strong correlation between the fitted values and the actual values, indicating decently strong model fit. While the actual values are generally evenly distributed, the fitted values are grouped together into four relatively vertical clusters. This is likely due to the influence of the dummy variables for each of the 4 values of `continent`.
+
+
+## Part 4: Tutorial for my_knn_cv
+
+The third function in this package, `my_knn_cv`,  uses k-nearest neighbor analysis to generate predicted classifications for an input dataset based on input covariates. In addition, the function uses cross-validation to calculate the average rate of misclassification in order to assist the user in selecting the optimal number of nearest neighbors to consider. Below, I demonstrate how the function works using the `my_penguins` dataset from the `palmerpenguins` package.
+
+The call for `my_knn_cv` requires the following parameters:
+
+* `train`: a data frame of training set cases which includes covariates of interest to be used in predicting `class`,
+* `cl`: a vector containing the true class values of the training data,
+* `k_nn`: an integer representing the number of nearest neighbors considered,
+* and `k_cv`: an integer representing the number of folds used in cross-validation.
+
+
+The function returns a list with the objects `class`, a vector of the predicted class for all observations, and `cv_err`, a numeric with the average cross-validation misclassification rate. 
+
+First, let's use `my_knn_cv` to predict output class `species` of the penguins in `my_penguins` based on the information in the dataset. To do so, we'll use the covariates `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g`.
+
+To start, let's omit NA values from the dataset:
+```{r}
+penguins <- na.omit(my_penguins)
+```
+
+Now we'll set up our call for `my_knn_cv`. This will include:
+
+* for `train`: the cleaned `penguins` data frame (excluding NAs), subset to include only our covariates of interest, which are in columns 3 through 6,
+* for `cl`: `penguins$species`, which represents the true `species` class values of the penguins in our training data,
+* for `k_nn`: we'll start with `5` nearest neighbors,
+* and for `k_cv`: we'll use `5`-fold cross-validation.
+
+And now let's run the function:
+```{r}
+my_knn_cv(penguins[, c(3:6)], penguins$species, 5, 5)
+```
+
+`Predicted class` gives us the species our model predicted for each penguin in our data set based on the covariates specified above. `Error rate` shows the average misclassification rate across each of the `k_cv` folds into which we split the data.
+
+Cross-validation is a powerful tool to help us identify the number of nearest neighbors that gives us a useful model fit. In the process of cross-validation, we split the input into `k_cv` parts called "folds" (5 in this case). All but 1 of the folds becomes our training data, which is used to fit the model. We use the trained model to predict the class of the remaining fold, which becomes our test data. Next, we switch which fold is the test data and repeat until all folds have been used to test the model. Finally, we compute the average misclassification rate over all the folds--this is our CV error rate. 
+
+Splitting the sample like this allows us to evaluate the performance of the k-nearest neighbors model on data that was not used to train it. This information is valuable in selecting an optimal k to train a final model. 
+
+To get a sense for how to use this feature of the function, let's now compare the cross-validation error from calls to `my_knn_cv` with different levels of `k_nn`. Here, we iterate from `k_nn`= 1, ..., 10, recording the cross-validation misclassification error rate and the training misclassification error rate for each level of `k_nn`. To calculate the training misclassification rates, we use train and test a new model with the full set of clean `penguins` data. 
+
+```{r}
+cv_errs <- rep(NA, 10)
+train_errs <- rep(NA, 10)
+
+library(class)
+for (i in 1:10) {
+    cv_errs[i] <- my_knn_cv(penguins[, c(3:6)], penguins$species, i, 5)[2]
+    train_errs[i] <- mean(knn(penguins[, c(3:6)], 
+                              penguins[, c(3:6)], 
+                              penguins$species, i) != penguins$species)
+}
+
+cv_errs_round <- round(as.vector(unlist(cv_errs)), digits = 3)
+train_errs_round <- round(as.vector(unlist(train_errs)), digits = 3)
+
+library(kableExtra)
+errs_df <- cbind("k_nn" = 1:10,
+                 "CV misclassification rate" = cv_errs_round,
+                 "Training misclassification rate" = train_errs_round)
+kable_styling(kable(errs_df))
+```
+
+Compare the rates in the table above. Both the CV misclassification rate and the training misclassification rates are minimized when 1 nearest neighbor is used. For further k-nearest neighbor analysis, it would be reasonable to continue with a model with a `k` value of 1--this appears to be the best-fit model. 
+
+
+## Part 5: Tutorial for my_rf_cv
+
+The fourth function in this package, `my_rf_cv`,  uses a random forest algorithm on the `my_penguins` data `palmerpenguins` package to predict `body_mass_g` with covariates `bill_length_mm`, `bill_depth_mm`, and `flipper_length_mm`. The function uses cross-validation to calculate and return the average rate of misclassification.
+
+The call for `my_knn_cv` requires the parameter `k`, which is a numeric with the number of folds used in cross-validation. It returns a numeric with the cross-validation misclassification error from the model. 
+
+Let's use `my_knn_cv` to compare the misclassification rates from cross-validation with 2, 5, and 10 folds. Below, we run the function 30 times each for each level of `k` and store the CV misclassification rate: 
+
+```{r}
+out_mat <- matrix(NA, nrow = 30, ncol = 3)
+
+for (k in c(2, 5, 10)) {
+  for (i in 1:30) {
+    for (j in 1:3){
+      out_mat[i, j] <- my_rf_cv(k)
+    }
+  }
+}
+
+out_df <- as.data.frame(out_mat)
+colnames(out_df) <- c("k = 2", "k = 5", "k = 10")
+```
+
+Using the stored output, we'll now plot the distributions of CV error over all 30 simulations for each level of k. 
+
+```{r}
+# Reformat output table for plot
+out_mat2 <- matrix(NA, nrow = 90, ncol = 2)
+out_df2 <- as.data.frame(out_mat2)
+z <- c(out_df$`k = 2`, out_df$`k = 5`, out_df$`k = 10`)
+out_df2[, 1] <- cbind(z)
+out_df2[, 2] <- cbind(rep(c("2", "5", "10"), each = 30))
+colnames(out_df2) <- c("MSE", "k")
+
+ggplot(data = out_df2, 
+       aes(x = k, y = MSE)) +
+  geom_boxplot(fill = "lightblue") +
+  theme_bw(base_size = 20) +
+  scale_x_discrete(limits = c("2", "5", "10")) +
+  labs(title = "Distribution of CV estimated MSE by number of folds", 
+       x = "Number of folds", 
+       y = "CV estimated MSE") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 12.5),
+        axis.title.y = element_text(size = 12.5))
+```
+
+The boxplot for the `k = 2` simulations has a larger interquartile range and a median error rate in between those of the plots for the `k = 5` and `k = 10` simulations. The boxplot for the `k = 5` simulations has a similar interquartile range, and the lowest median error rate. The boxplot for the `k = 10` simulations has a smaller interquartile range and the highest median error rate.
+
+Now, we'll generate a table displaying the average CV misclassification rate and the standard CV misclassification rate. 
+
+```{r}
+results_df <- cbind("Number of folds" = c(2, 5, 10),
+                    "Mean of CV misclassification rate" = c(mean(out_df[, 1]), 
+                                         mean(out_df[, 2]),
+                                         mean(out_df[, 3])),
+                    "Standard deviation of CV misclassification rate"
+                    = c(sd(out_df[, 1]),
+                        sd(out_df[, 2]),
+                        sd(out_df[, 3])))
+
+kable_styling(kable(results_df))
+```
+
+The patterns that emerged in the table are similar to those we saw in the boxplots. The mean of the CV misclassification rate is lowest when 5 folds are used, and when 2 folds are used, the mean rate is slightly higher. The mean is highest when 10 folds are used. The standard deviation of the CV misclassification rate is highest when 5 folds are used, and is lower when 2 and 10 folds are used, 10 having the lowest standard deviation. It appears, then, that when 5 folds are used, the average CV misclassification rate is lower but more variable. When 10 are used, the rate is higher but more variable.
+
+When 10 folds are used, each fold contains fewer observations than each of the other cases. The increased error rate may be due to the fact that the test data sets are smaller or that running more tests increases the likelihood of outlying values that drive up the mean. 
+
+In addition, it stands to reason that standard deviation would rise alongside the number of folds: the each of the 10 sets of the training data includes 9 of the folds, so the ouputs of the models are likely to be highly correlated. Typically, this will increase the variance of the estimates. Since the 10-fold cross-validation case appears to have the lowest variability, however, this pattern may not hold true in this particular case. 
